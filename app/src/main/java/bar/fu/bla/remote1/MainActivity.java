@@ -8,11 +8,13 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.provider.SyncStateContract;
+import android.text.Editable;
 import android.text.format.Formatter;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +24,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.math.*;
+import java.net.UnknownHostException;
 import java.security.*;
 import java.util.Calendar;
 
@@ -31,6 +34,8 @@ public class MainActivity extends Activity {
 
         private InetAddress address;
         private Calendar rightNow;
+        private TextView textView;
+
 
 
     @Override
@@ -40,7 +45,7 @@ public class MainActivity extends Activity {
         rightNow = Calendar.getInstance();
         try{
           address=getBroadcastAddress();
-          TextView textView = (TextView) findViewById(R.id.textView);
+          textView = (TextView) findViewById(R.id.textView);
           textView.setText(address.toString());
         } catch (IOException e) {
             address=InetAddress.getLoopbackAddress();
@@ -143,4 +148,26 @@ public class MainActivity extends Activity {
         sendBroadcast("PASUE");
     }
 
+    //Klicken des Buttons Reset
+    public void ResetbuttonOnClick(View v) {
+        try{
+            address=getBroadcastAddress();
+            textView.setText(address.toString());
+        } catch (IOException e) {
+            address=InetAddress.getLoopbackAddress();
+        }
+    }
+
+    //Klicken des Buttons SetTo
+    public void SettobuttonOnClick(View v) {
+        EditText et = (EditText) findViewById(R.id.editText);
+        try {
+            String a = et.getText().toString();
+            System.out.println(a);
+            address=address.getByName(a.toString());
+            textView.setText(address.toString());
+        }catch (UnknownHostException e){
+            System.out.println("fuu!");
+        }
+    }
 }
